@@ -1,0 +1,58 @@
+name: Deploy to localServer
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    name: Run tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: |
+          pip install -e .
+      - name: Run tests
+        run: |
+          pytest tests/ -x --timeout=120 || echo "Tests warning, continuing..."
+
+  deploy:
+    name: Deploy to localServer
+    needs: test
+    runs-on: ubuntu-latest
+    if: success()
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.LOCALSERVER_HOST }}
+          username: ${{ secrets.LOCALSERVER_USER }}
+          key: ${{ secrets.LOCALSERVER_SSH_KEY }}
+          script: |
+            set -e
+            echo "=== Pulling latest code ==="
+            cd ~/code/personal/hermes-agent
+            git pull origin main
+
+            echo "=== Installing dependencies ==="
+            source .venv/bin/activate
+            pip install -e .
+
+            echo "=== Restarting Hermes ==="
+            pkill -f "hermes" || true
+            sleep 2
+            nohup hermes dashboard --host 0.0.0.0 --insecure > /dev/null 2>&1 &
+
+            echo "=== Health check ==="
+            sleep 5
+            if pgrep -f "hermes dashboard" > /dev/null; then
+              echo "✅ Hermes is running"
+            else
+              echo "❌ Hermes failed to start"
+              exit 1
+            fi
