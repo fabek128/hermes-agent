@@ -40,14 +40,13 @@ jobs:
             git pull origin main
 
             echo "=== Installing dependencies ==="
-            cd ~/code/personal/hermes-agent
-            git pull origin main
             uv pip install -e .
 
             echo "=== Restarting Hermes ==="
             pkill -f "hermes" || true
-            sleep 2
+            sleep 3
             nohup hermes dashboard --host 0.0.0.0 --insecure > /dev/null 2>&1 &
+            nohup hermes gateway run --replace > /dev/null 2>&1 &
 
             echo "=== Health check ==="
             sleep 5
