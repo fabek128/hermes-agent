@@ -40,8 +40,9 @@ jobs:
             git pull origin main
 
             echo "=== Installing dependencies ==="
-            source .venv/bin/activate
-            pip install -e .
+            cd ~/code/personal/hermes-agent
+            git pull origin main
+            uv pip install -e .
 
             echo "=== Restarting Hermes ==="
             pkill -f "hermes" || true
