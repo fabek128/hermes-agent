@@ -90,10 +90,13 @@ def main():
     import argparse
     parser = argparse.ArgumentParser(description="Switch LM Studio model")
     parser.add_argument("--host", default=DEFAULT_HOST, help=f"Server URL (default: {DEFAULT_HOST})")
-    parser.add_argument("--target", "-t", required=True, help="Model ID to load")
+    parser.add_argument("--target", "-t", help="Model ID to load")
     parser.add_argument("--list", "-l", action="store_true", help="List available models and exit")
     parser.add_argument("--force", "-f", action="store_true", help="Skip unload confirmation")
     args = parser.parse_args()
+
+    if not args.target and not args.list:
+        parser.error("either --target or --list is required")
 
     host = args.host.rstrip("/")
 
