@@ -25,7 +25,9 @@ Do not use this skill in a runtime readonly secret retrieval agent.
 
 For readonly secret retrieval, use the separate skill:
 
-`bitwarden-secret-readonly`
+```txt
+bitwarden-secret-readonly
+```
 
 The readonly agent must not load this admin skill.
 
@@ -37,14 +39,14 @@ Examples:
 
 ```bash
 bw config server https://vault.ingenio.uno
-bw login <email>
+bw login "$EMAIL"
 bw unlock
 bw list items
 bw list folders
-bw get item <item_id>
-bw create item <encoded_json>
-bw create folder <encoded_json>
-bw delete item <item_id>
+bw get item "$ITEM_ID"
+bw create item "$ENCODED_JSON"
+bw create folder "$ENCODED_JSON"
+bw delete item "$ITEM_ID"
 ```
 
 ## Admin safety rules
@@ -65,8 +67,14 @@ It may mention local files, environment variables, shell configuration, login fl
 
 Because of that, it must not be available to the readonly `bitwarden-agent`.
 
-For runtime secret retrieval, use only:
+For runtime secret retrieval, use only the readonly skill:
+
+```txt
+bitwarden-secret-readonly
+```
+
+and the wrapper:
 
 ```bash
-~/.hermes/profiles/bitwarden-agent/bin/bw-secret "<query>"
+~/.hermes/profiles/bitwarden-agent/bin/bw-secret "$QUERY"
 ```
