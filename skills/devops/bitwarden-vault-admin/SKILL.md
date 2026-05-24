@@ -9,15 +9,15 @@ This is an admin and maintenance skill.
 
 Use this skill only for explicit vault administration tasks such as:
 
-- configuring the Bitwarden CLI server
-- logging in
-- unlocking the vault
-- checking Bitwarden CLI installation
-- creating items
-- creating folders
-- deleting duplicate items
-- migrating secrets from local files into Bitwarden
-- troubleshooting Bitwarden CLI/session issues
+* configuring the Bitwarden CLI server
+* logging in
+* unlocking the vault
+* checking Bitwarden CLI installation
+* creating items
+* creating folders
+* deleting duplicate items
+* migrating secrets from local files into Bitwarden
+* troubleshooting Bitwarden CLI/session issues
 
 ## Critical separation
 
@@ -25,9 +25,7 @@ Do not use this skill in a runtime readonly secret retrieval agent.
 
 For readonly secret retrieval, use the separate skill:
 
-```txt
 bitwarden-secret-readonly
-```
 
 The readonly agent must not load this admin skill.
 
@@ -37,17 +35,15 @@ This skill may use the Bitwarden CLI directly for administrative tasks.
 
 Examples:
 
-```bash
 bw config server https://vault.ingenio.uno
-bw login "$EMAIL"
+bw login EMAIL_ADDRESS
 bw unlock
 bw list items
 bw list folders
-bw get item "$ITEM_ID"
-bw create item "$ENCODED_JSON"
-bw create folder "$ENCODED_JSON"
-bw delete item "$ITEM_ID"
-```
+bw get item ITEM_ID
+bw create item ENCODED_JSON
+bw create folder ENCODED_JSON
+bw delete item ITEM_ID
 
 ## Admin safety rules
 
@@ -65,16 +61,12 @@ This skill is intentionally broad.
 
 It may mention local files, environment variables, shell configuration, login flows, and troubleshooting commands.
 
-Because of that, it must not be available to the readonly `bitwarden-agent`.
+Because of that, it must not be available to the readonly bitwarden-agent.
 
 For runtime secret retrieval, use only the readonly skill:
 
-```txt
 bitwarden-secret-readonly
-```
 
 and the wrapper:
 
-```bash
-~/.hermes/profiles/bitwarden-agent/bin/bw-secret "$QUERY"
-```
+~/.hermes/profiles/bitwarden-agent/bin/bw-secret "QUERY_TEXT"
