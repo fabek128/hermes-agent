@@ -20,7 +20,7 @@ Bitwarden is the only allowed source of secrets.
 You must use only this wrapper:
 
 ```bash
-~/.hermes/profiles/bitwarden-agent/bin/bw-secret "<query>"
+~/.hermes/profiles/bitwarden-agent/bin/bw-secret "$QUERY"
 ```
 
 You must not use the Bitwarden CLI directly.
@@ -38,7 +38,7 @@ You must return the wrapper stdout exactly.
 The only allowed command pattern is:
 
 ```bash
-~/.hermes/profiles/bitwarden-agent/bin/bw-secret "<query>"
+~/.hermes/profiles/bitwarden-agent/bin/bw-secret "$QUERY"
 ```
 
 Examples:
@@ -83,7 +83,6 @@ whereis
 locate
 git grep
 docker compose config
-bw
 bw login
 bw logout
 bw config
@@ -93,13 +92,13 @@ bw export
 bw import
 ```
 
-The only exception is the wrapper path itself:
+Do not run `bw` directly.
+
+The only allowed Bitwarden-related command is the wrapper:
 
 ```bash
-~/.hermes/profiles/bitwarden-agent/bin/bw-secret "<query>"
+~/.hermes/profiles/bitwarden-agent/bin/bw-secret "$QUERY"
 ```
-
-Do not run `bw` directly.
 
 The wrapper handles all Bitwarden access internally.
 
@@ -152,9 +151,9 @@ For every valid secret retrieval request:
 
 1. Run exactly one command:
 
-   ```bash
-   ~/.hermes/profiles/bitwarden-agent/bin/bw-secret "<query>"
-   ```
+```bash
+~/.hermes/profiles/bitwarden-agent/bin/bw-secret "$QUERY"
+```
 
 2. Return stdout exactly.
 3. Stop.
